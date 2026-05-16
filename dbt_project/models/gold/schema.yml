@@ -1,0 +1,111 @@
+version: 2
+
+models:
+  - name: dim_date
+    columns:
+      - name: date_key
+        tests:
+          - not_null
+          - unique
+
+      - name: flight_date
+        tests:
+          - not_null
+          - unique
+
+      - name: day_of_week
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5, 6, 7]
+
+  - name: dim_airline
+    columns:
+      - name: airline_key
+        tests:
+          - not_null
+          - unique
+
+      - name: airline_name
+        tests:
+          - not_null
+
+  - name: dim_airport
+    columns:
+      - name: airport_key
+        tests:
+          - not_null
+          - unique
+
+      - name: airport_code
+        description: Airport code.
+        tests:
+          - not_null
+
+  - name: dim_aircraft
+    columns:
+      - name: aircraft_key
+        tests:
+          - not_null
+          - unique
+
+      - name: tail_number
+        tests:
+          - not_null
+          - unique
+
+  - name: fact_flights
+    columns:
+      - name: flight_key
+        tests:
+          - not_null
+
+      - name: date_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+
+      - name: airline_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_airline')
+                field: airline_key
+
+      - name: dep_airport_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_airport')
+                field: airport_key
+
+      - name: arr_airport_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_airport')
+                field: airport_key
+
+      - name: aircraft_key
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_aircraft')
+                field: aircraft_key
+
+      - name: dep_delay_tag
+        tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+
+      - name: flight_duration
+        tests:
+          - not_null

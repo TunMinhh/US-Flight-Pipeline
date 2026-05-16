@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: stg_flights
+    description: Cleaned and typed flight records from the bronze raw_flights table.
+    columns:
+      - name: flight_id
+        tests:
+          - not_null
+          - unique
+
+      - name: flight_date
+        tests:
+          - not_null
+
+      - name: day_of_week
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5, 6, 7]
+
+      - name: airline
+        tests:
+          - not_null
+
+      - name: dep_airport
+        tests:
+          - not_null
+
+      - name: arr_airport
+        tests:
+          - not_null
+
+      - name: flight_duration
+        tests:
+          - not_null

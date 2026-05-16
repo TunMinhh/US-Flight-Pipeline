@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: bronze
+    schema: bronze
+    tables:
+      - name: raw_flights
+        description: Raw US flights data loaded from CSV into the bronze layer.

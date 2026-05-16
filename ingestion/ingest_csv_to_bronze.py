@@ -82,7 +82,7 @@ def get_engine():
     return create_engine(url, pool_pre_ping=True)
 
 def create_bronze_table(engine):
-    """Tạo bảng bronze.raw_flights nếu chưa có."""
+    """Create bronze.raw_flights if not existed."""
     ddl = f"""
     CREATE SCHEMA IF NOT EXISTS {TARGET_SCHEMA};
  
