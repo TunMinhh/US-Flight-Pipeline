@@ -3,6 +3,7 @@ x-airflow-common: &airflow-common
     context: .
     dockerfile: Dockerfile.airflow
   image: us-flight-airflow:2.9.3
+  user: "${AIRFLOW_UID:-50000}:0"
   env_file:
     - .env
   environment:
@@ -59,8 +60,8 @@ services:
   airflow-init:
     <<: *airflow-common
     container_name: airflow_init
-    entrypoint: /bin/bash
     command:
+      - bash
       - -c
       - |
         airflow db migrate

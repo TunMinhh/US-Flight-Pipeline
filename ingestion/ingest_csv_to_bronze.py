@@ -115,17 +115,15 @@ def create_bronze_table(engine):
         _source_file        TEXT
     );
     """
-    with engine.connect() as conn:
+    with engine.begin() as conn:
         conn.execute(text(ddl))
-        conn.commit()
     log.info(f"Table {TARGET_SCHEMA}.{TARGET_TABLE} ready")
 
 
 def truncate_table(engine):
     """Truncate old data before reloading"""
-    with engine.connect() as conn:
+    with engine.begin() as conn:
         conn.execute(text(f"TRUNCATE TABLE {TARGET_SCHEMA}.{TARGET_TABLE}"))
-        conn.commit()
     log.info("Old table truncated. Begin to load new table.")
 
 def transform_chunk(df: pd.DataFrame, source_file: str) -> pd.DataFrame:

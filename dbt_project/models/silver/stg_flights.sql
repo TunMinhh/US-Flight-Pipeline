@@ -3,6 +3,24 @@ with source as (
     from {{ source('bronze', 'raw_flights') }}
 ),
 
+deduped as (
+    select *
+    from (
+        select *,
+            row_number() over (
+                partition by
+                    flight_date, airline, tail_number, dep_airport, arr_airport,
+                    dep_time_label, dep_delay, arr_delay, flight_duration,
+                    dep_delay_tag, distance_type, delay_carrier, delay_weather,
+                    delay_nas, delay_security, delay_last_aircraft, dep_delay_type,
+                    coalesce(_source_file, '')
+                order by _ingested_at
+            ) as rn
+        from source
+    ) t
+    where rn = 1
+),
+
 cleaned as (
     select
         md5(
@@ -18,6 +36,13 @@ cleaned as (
                 arr_delay,
                 flight_duration,
                 dep_delay_tag,
+                distance_type,
+                delay_carrier,
+                delay_weather,
+                delay_nas,
+                delay_security,
+                delay_last_aircraft,
+                dep_delay_type,
                 coalesce(_source_file, '')
             )
         ) as flight_id,
@@ -54,7 +79,7 @@ cleaned as (
 
         _ingested_at,
         _source_file
-    from source
+    from deduped
 )
 
 select *
