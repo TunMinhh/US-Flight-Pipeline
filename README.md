@@ -53,11 +53,9 @@ US_Flight_2023/
 `-- README.md
 ```
 
-<!--
 ## Metabase Dashboard
 
 ![Metabase Dashboard](image/metabase_dashboard.png)
--->
 
 ## How to Run
 
