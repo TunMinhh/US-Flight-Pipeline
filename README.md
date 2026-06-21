@@ -1,6 +1,6 @@
-﻿# US Flight 2023 Data Pipeline
+# US Flight 2023 Data Pipeline
 
-An end-to-end data engineering pipeline processing ~6 million US domestic flight records from 2023. Implements a medallion architecture (Bronze → Silver → Gold) on PostgreSQL, orchestrated with Airflow and transformed with dbt, with results visualized in Metabase.
+An end-to-end data engineering pipeline processing ~6 million US domestic flight records from 2023. Implements a medallion architecture (Bronze -> Silver -> Gold) on PostgreSQL, orchestrated with Airflow and transformed with dbt, with results visualized in Metabase.
 
 ## Pipeline Architecture
 
@@ -8,19 +8,19 @@ An end-to-end data engineering pipeline processing ~6 million US domestic flight
 
 ## Tech Stack
 
-- **Python** - ingestion scripting and pipeline logic
-- **pandas** - chunk-based CSV reading and preprocessing
+- **Python** - chunk-based ingestion and technical column normalization
+- **pandas** - memory-efficient CSV reading while preserving source values as text
 - **PostgreSQL** - lightweight data warehouse
 - **dbt** - SQL transformations, data modeling, and data tests
 - **Apache Airflow** - pipeline orchestration
 - **Metabase** - dashboarding and data visualization
 - **Docker Compose** - local containerized environment
-- **SQLAlchemy / psycopg2** - PostgreSQL connection from Python
+- **SQLAlchemy / psycopg2** - database setup and bulk loading with PostgreSQL `COPY FROM STDIN`
 
 ## Data Pipeline
 
 1. Airflow checks that the raw CSV file exists.
-2. Python ingests `data/raw/US_flights_2023.csv` into `bronze.raw_flights` in PostgreSQL.
+2. Python reads the CSV in 500,000-row chunks and bulk-loads it into `bronze.raw_flights` using PostgreSQL `COPY FROM STDIN`.
 3. dbt builds the `silver` layer by cleaning, typing, and deduplicating the raw data.
 4. dbt builds the `gold` layer as analytics-ready fact and dimension tables.
 5. dbt tests validate key fields and relationships.
@@ -28,9 +28,9 @@ An end-to-end data engineering pipeline processing ~6 million US domestic flight
 
 ## Data Warehouse Layers
 
-- **Bronze**: raw ingested flight data with light column renaming and metadata
-- **Silver**: cleaned and typed staging model, `stg_flights`
-- **Gold**: star-schema style analytics models
+- **Bronze**: source values preserved as `TEXT`, with only technical column naming and ingestion metadata (`_ingested_at`, `_source_file`)
+- **Silver**: dbt view `stg_flights` that trims, handles blank values, casts data types, and removes duplicates
+- **Gold**: materialized star-schema tables for analytics
   - `fact_flights`
   - `dim_airline`
   - `dim_airport`
@@ -82,6 +82,3 @@ The DAG runs CSV ingestion, dbt transformations, and dbt tests.
 ## Notes
 
 Apache Airflow is intentionally used here to simulate a production-grade orchestration layer and demonstrate familiarity with industry-standard tooling.
-
-
-

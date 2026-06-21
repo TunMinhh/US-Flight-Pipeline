@@ -48,34 +48,34 @@ cleaned as (
         ) as flight_id,
 
         nullif(trim(flight_date), '')::date as flight_date,
-        day_of_week::integer as day_of_week,
+        nullif(trim(day_of_week), '')::integer as day_of_week,
 
         nullif(trim(airline), '') as airline,
         nullif(trim(tail_number), '') as tail_number,
         nullif(trim(manufacturer), '') as manufacturer,
         nullif(trim(model), '') as model,
-        aircraft_age::integer as aircraft_age,
+        nullif(trim(aircraft_age), '')::integer as aircraft_age,
 
         nullif(trim(dep_airport), '') as dep_airport,
         nullif(trim(dep_city), '') as dep_city,
         nullif(trim(dep_time_label), '') as dep_time_label,
-        dep_delay::integer as dep_delay,
-        dep_delay_tag::integer as dep_delay_tag,
+        nullif(trim(dep_delay), '')::integer as dep_delay,
+        nullif(trim(dep_delay_tag), '')::integer as dep_delay_tag,
         nullif(trim(dep_delay_type), '') as dep_delay_type,
 
         nullif(trim(arr_airport), '') as arr_airport,
         nullif(trim(arr_city), '') as arr_city,
-        arr_delay::integer as arr_delay,
+        nullif(trim(arr_delay), '')::integer as arr_delay,
         nullif(trim(arr_delay_type), '') as arr_delay_type,
 
-        flight_duration::integer as flight_duration,
+        nullif(trim(flight_duration), '')::integer as flight_duration,
         nullif(trim(distance_type), '') as distance_type,
 
-        delay_carrier::integer as delay_carrier,
-        delay_weather::integer as delay_weather,
-        delay_nas::integer as delay_nas,
-        delay_security::integer as delay_security,
-        delay_last_aircraft::integer as delay_last_aircraft,
+        nullif(trim(delay_carrier), '')::integer as delay_carrier,
+        nullif(trim(delay_weather), '')::integer as delay_weather,
+        nullif(trim(delay_nas), '')::integer as delay_nas,
+        nullif(trim(delay_security), '')::integer as delay_security,
+        nullif(trim(delay_last_aircraft), '')::integer as delay_last_aircraft,
 
         _ingested_at,
         _source_file
